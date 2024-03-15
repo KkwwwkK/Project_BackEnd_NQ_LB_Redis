@@ -23,6 +23,7 @@ public class GetAllProductResponseDto {
         this.imageUrl = data.getImageUrl();
         this.price = data.getPrice();
         this.hasStock = data.isHasStock();
+        // can consider replace isHasStock to "stock > 0"
     }
 
     public Integer getPid() {

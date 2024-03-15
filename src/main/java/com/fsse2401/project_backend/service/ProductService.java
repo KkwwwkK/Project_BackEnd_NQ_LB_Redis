@@ -15,8 +15,9 @@ public interface ProductService {
 
     List<ProductResponseData> getProductsByUserInput(String userInput);
 
-    ProductEntity getEntityById(Integer pid);
 
+    // // Create method to query database for a product by id
+    ProductEntity getEntityByPid(Integer pid);
 
     // Create method for querying database to find products by description
     List<ProductEntity> getProductsByName(String userInput);

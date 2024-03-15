@@ -6,15 +6,18 @@ import com.fsse2401.project_backend.data.product.dto.response.GetAllProductRespo
 import com.fsse2401.project_backend.data.product.dto.response.ProductResponseDto;
 import com.fsse2401.project_backend.service.ProductService;
 import com.fsse2401.project_backend.util.ProductDataUtil;
+import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@RequestMapping("/public/product")
 public class ProductApi {
     // Add bean
     private final ProductService productService;
@@ -23,7 +26,7 @@ public class ProductApi {
         this.productService = productService;
     }
 
-    @GetMapping("/public/product")
+    @GetMapping
     public List<GetAllProductResponseDto> getAllProducts(){
         List<GetAllProductResponseDto> getAllProductResponseDtoList = new ArrayList<>();
         for(GetAllProductResponseData productResponseData: productService.getAllProducts()){
@@ -32,18 +35,17 @@ public class ProductApi {
         return getAllProductResponseDtoList;
     }
 
-    @GetMapping("/public/product/{id}")
+    @GetMapping("/{id}")
     public ProductResponseDto getProductById(@PathVariable Integer id){
         return new ProductResponseDto(
                 productService.getProductById(id)
         );
     }
 
-    @GetMapping("/public/products/{user_input}")
+    @GetMapping("/all/{user_input}")
     public List<ProductResponseDto> getProductsByUserInput(@PathVariable String user_input){
         return ProductDataUtil.toProductResponseDto(
                 productService.getProductsByUserInput(user_input));
     }
-
 
 }

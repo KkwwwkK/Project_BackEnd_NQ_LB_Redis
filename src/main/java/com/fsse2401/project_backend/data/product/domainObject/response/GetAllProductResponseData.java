@@ -18,6 +18,7 @@ public class GetAllProductResponseData {
         this.imageUrl = entity.getImageUrl();
         this.price = entity.getPrice();
         setHasStock(entity);
+        // can consider replace setHasStock to "stock > 0"
     }
 
     public Integer getPid() {

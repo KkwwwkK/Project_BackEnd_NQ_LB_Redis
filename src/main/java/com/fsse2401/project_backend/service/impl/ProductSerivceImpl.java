@@ -8,8 +8,6 @@ import com.fsse2401.project_backend.exception.product.ProductNotFoundException;
 import com.fsse2401.project_backend.repository.ProductRepository;
 import com.fsse2401.project_backend.service.ProductService;
 import com.fsse2401.project_backend.util.ProductDataUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +17,7 @@ import java.util.List;
 @Service
 public class ProductSerivceImpl implements ProductService {
     // Exception checking
-    Logger logger = LoggerFactory.getLogger(ProductSerivceImpl.class);
-
+//    Logger logger = LoggerFactory.getLogger(ProductSerivceImpl.class);
     // Add beans
     private final ProductRepository productRepository;
 
@@ -29,6 +26,8 @@ public class ProductSerivceImpl implements ProductService {
         this.productRepository = productRepository;
     }
 
+
+    // Logic for get all products Api
     @Override
     // Get Service
     public List<GetAllProductResponseData> getAllProducts(){
@@ -39,16 +38,14 @@ public class ProductSerivceImpl implements ProductService {
         return getAllProductResponseDataList;
     }
 
+    // Logic for get product by id Api
     @Override
     public ProductResponseData getProductById(Integer pid){
-        // Check if pid is null
-        if (pid == null){
-            throw new DataMissingException("product id");
-        }
         // Get Product
-        return new ProductResponseData(getEntityById(pid));
+        return new ProductResponseData(getEntityByPid(pid));
     }
 
+    // Logic for get products by user description of product name Api
     @Override
     public List<ProductResponseData> getProductsByUserInput(String userInput){
         // Check if userInput is empty
@@ -63,14 +60,14 @@ public class ProductSerivceImpl implements ProductService {
         return ProductDataUtil.toProductResponseData(getProductsByName(userInput));
     }
 
-    // Create method for querying database to find product by id
+    // // Create method to query database for a product by id
     @Override
-    public ProductEntity getEntityById (Integer pid){
+    public ProductEntity getEntityByPid(Integer pid){
         return productRepository.findByPid(pid).orElseThrow(ProductNotFoundException::new);
     }
 
+    // Create method for querying database to find products by description of product name
     @Override
-    // Create method for querying database to find products by description
     public List<ProductEntity> getProductsByName(String userInput){
         return productRepository.findByNameContaining(userInput);
     }
