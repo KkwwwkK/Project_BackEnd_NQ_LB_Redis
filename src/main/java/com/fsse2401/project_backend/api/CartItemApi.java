@@ -5,6 +5,7 @@ import com.fsse2401.project_backend.data.cartItem.dto.CartItemResponseDto;
 import com.fsse2401.project_backend.data.cartItem.dto.GetUserCartResponseDto;
 import com.fsse2401.project_backend.data.cartItem.dto.UpdateUserCartResponseDto;
 import com.fsse2401.project_backend.service.CartItemService;
+import com.fsse2401.project_backend.util.CartItemDataUtil;
 import com.fsse2401.project_backend.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -39,13 +40,7 @@ public class CartItemApi {
     public List<GetUserCartResponseDto> getUserCart(JwtAuthenticationToken jwtToken){
         List<GetUserCartResponseData> getUserCartResponseDataList
                 = cartItemService.getUserCartItemList(JwtUtil.getFirebaseUserData(jwtToken));
-        List<GetUserCartResponseDto> getUserCartResponseDtoList = new ArrayList<>();
-        for(GetUserCartResponseData getUserCartResponseData: getUserCartResponseDataList){
-            getUserCartResponseDtoList.add(
-                    new GetUserCartResponseDto(getUserCartResponseData)
-            );
-        }
-        return getUserCartResponseDtoList;
+        return CartItemDataUtil.toResponseDtoList(getUserCartResponseDataList);
     }
 
     @PatchMapping("/{pid}/{quantity}")
@@ -59,4 +54,14 @@ public class CartItemApi {
                 )
         );
     }
+
+    @DeleteMapping("/{pid}")
+    public CartItemResponseDto removeUserCartByPid(JwtAuthenticationToken jwtToken,
+                                                   @PathVariable Integer pid){
+        return new CartItemResponseDto(
+                cartItemService.removeCartItemByPid(
+                        JwtUtil.getFirebaseUserData(jwtToken), pid)
+        );
+    }
+
 }

@@ -15,4 +15,6 @@ public interface CartItemService {
 
     UpdateUserCartResponseData UpdateCartQuantityByPid(FirebaseUserData firebaseUserData,
                                                        Integer pid, Integer quantity);
+
+    CartItemResponseData removeCartItemByPid(FirebaseUserData firebaseUserData, Integer pid);
 }

@@ -16,6 +16,7 @@ import com.fsse2401.project_backend.repository.ProductRepository;
 import com.fsse2401.project_backend.service.CartItemService;
 import com.fsse2401.project_backend.service.ProductService;
 import com.fsse2401.project_backend.service.UserService;
+import com.fsse2401.project_backend.util.CartItemDataUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -44,6 +45,8 @@ public class CartItemServiceImpl implements CartItemService {
 
         // Get user entity
         UserEntity userEntity = userService.getEntityByFirebaseUserData(firebaseUserData);
+        // Get product entity and check if product existed
+        ProductEntity productEntity = productService.getEntityByPid(pid);
 
         // Check if pid or quantity is null << Not working yet
         if (pid == null){
@@ -56,8 +59,7 @@ public class CartItemServiceImpl implements CartItemService {
         if (quantity <= 0){
             throw new AddQuantityException();
         }
-        // Get product entity and check if product existed
-        ProductEntity productEntity = productService.getEntityByPid(pid);
+
         // Check if quantity bigger than product's stock, if yes, return enum Failure
         if (quantity > productEntity.getStock()){
             return  new CartItemResponseData(CartItemResult.FAIL);
@@ -92,11 +94,7 @@ public class CartItemServiceImpl implements CartItemService {
             throw new GetUserCartException("User do not have any cart items yet!");
         }
         // return list
-        List<GetUserCartResponseData> getUserCartResponseData = new ArrayList<>();
-        for(CartItemEntity cartItemEntity: cartItemEntityList){
-            getUserCartResponseData.add(new GetUserCartResponseData(cartItemEntity));
-        }
-        return getUserCartResponseData;
+        return CartItemDataUtil.toResponseDataList(cartItemEntityList);
     }
 
     @Override
@@ -134,12 +132,39 @@ public class CartItemServiceImpl implements CartItemService {
             throw new GetUserCartException("User cart does not have this product!");
         }
         // Return the updated cartItem entity from database
-        CartItemEntity updateCartItemEntity = cartItemRepository.findByUserAndProduct(userEntity, productEntity).orElse(null);
-        if (updateCartItemEntity == null){
+        CartItemEntity updatedCartItemEntity = cartItemRepository.findByUserAndProduct(userEntity, productEntity).orElse(null);
+        if (updatedCartItemEntity == null){
             throw new GetUserCartException("User cart does not have this product!");
         }
-        return new UpdateUserCartResponseData(updateCartItemEntity);
+        return new UpdateUserCartResponseData(updatedCartItemEntity);
     }
+
+    @Override
+    public CartItemResponseData removeCartItemByPid(FirebaseUserData firebaseUserData, Integer pid){
+        // Get user entity
+        UserEntity userEntity = userService.getEntityByFirebaseUserData(firebaseUserData);
+        // Get product entity and check if product existed
+        ProductEntity productEntity = productService.getEntityByPid(pid);
+        // Check if pid or quantity is null << Not working yet
+        if (pid == null){
+            throw new DataMissingException("pid input invalid!");
+        }
+        // Search if cart item exists
+        CartItemEntity isExistCartItemEntity = cartItemRepository.findByUserAndProduct(userEntity, productEntity).orElse(null);
+        if(isExistCartItemEntity != null){
+            // Update the product stock first before remove the product from the cart
+            productEntity.setStock(productEntity.getStock() + isExistCartItemEntity.getQuantity());
+            // Update product database
+            productRepository.save(productEntity);
+            // Remove the cart
+            cartItemRepository.delete(isExistCartItemEntity);
+        } else {
+            return new CartItemResponseData(CartItemResult.FAIL);
+        }
+
+        return new CartItemResponseData(CartItemResult.SUCCESS);
+    }
+
 
 
 }
