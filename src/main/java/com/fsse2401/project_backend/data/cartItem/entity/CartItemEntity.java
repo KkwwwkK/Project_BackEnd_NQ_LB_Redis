@@ -16,10 +16,18 @@ public class CartItemEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
     @Column(nullable = false)
-    private Integer quantity;
+    private Integer quantity = 0;
 
     public CartItemEntity() {
     }
+
+
+    public CartItemEntity(Integer quantity, ProductEntity productEntity, UserEntity userEntity) {
+        this.product = productEntity;
+        this.user = userEntity;
+        this.quantity += quantity;
+    }
+
 
     public Integer getCid() {
         return cid;
