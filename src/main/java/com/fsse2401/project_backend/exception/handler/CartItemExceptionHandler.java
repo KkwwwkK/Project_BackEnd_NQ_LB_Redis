@@ -1,6 +1,7 @@
 package com.fsse2401.project_backend.exception.handler;
 
 import com.fsse2401.project_backend.exception.cartItem.AddQuantityException;
+import com.fsse2401.project_backend.exception.cartItem.CartItemNotFoundException;
 import com.fsse2401.project_backend.exception.cartItem.GetUserCartException;
 import com.fsse2401.project_backend.exception.product.DataMissingException;
 import com.fsse2401.project_backend.exception.response.ErrorResponse;
@@ -33,6 +34,13 @@ public class CartItemExceptionHandler {
     @ExceptionHandler(GetUserCartException.class)
     public ResponseEntity<ErrorResponse> handleGetUserCartException(GetUserCartException e) {
         logger.info("GetUserCartException: " + e.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(), e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(CartItemNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleCartItemNotFoundException(CartItemNotFoundException e) {
+        logger.info("CartItemNotFoundException: " + e.getMessage());
         ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(), e.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }

@@ -1,5 +1,6 @@
 package com.fsse2401.project_backend.data.product.entity;
 
+import com.fsse2401.project_backend.data.transactionProduct.entity.TransactionProductEntity;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -24,7 +25,14 @@ public class ProductEntity {
     public ProductEntity() {
     }
 
-    // TO DO: Constructor with RequestData
+    public ProductEntity(TransactionProductEntity entity) {
+        setPid(entity.getPid());
+        this.name = entity.getName();
+        this.description = entity.getDescription();
+        this.imageUrl = entity.getImageUrl();
+        this.price = entity.getPrice();
+        this.stock = entity.getStock();
+    }
 
 
     public Integer getPid() {

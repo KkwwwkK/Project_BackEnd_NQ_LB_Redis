@@ -21,4 +21,6 @@ public interface ProductService {
 
     // Create method for querying database to find products by description
     List<ProductEntity> getProductsByName(String userInput);
+
+    void updateProductToDatabase(ProductEntity productEntity);
 }

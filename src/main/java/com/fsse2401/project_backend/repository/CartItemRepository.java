@@ -12,4 +12,8 @@ public interface CartItemRepository extends CrudRepository<CartItemEntity, Integ
     Optional<CartItemEntity> findByUserAndProduct(UserEntity user, ProductEntity product);
     List<CartItemEntity> findAllByUser(UserEntity user);
 
+    boolean existsByUserAndProduct(UserEntity user, ProductEntity product);
+
+    void deleteAllByUser(UserEntity user);
+
 }

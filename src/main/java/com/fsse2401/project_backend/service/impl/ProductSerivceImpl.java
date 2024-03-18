@@ -16,8 +16,6 @@ import java.util.List;
 
 @Service
 public class ProductSerivceImpl implements ProductService {
-    // Exception checking
-//    Logger logger = LoggerFactory.getLogger(ProductSerivceImpl.class);
     // Add beans
     private final ProductRepository productRepository;
 
@@ -70,6 +68,11 @@ public class ProductSerivceImpl implements ProductService {
     @Override
     public List<ProductEntity> getProductsByName(String userInput){
         return productRepository.findByNameContaining(userInput);
+    }
+
+    @Override
+    public void updateProductToDatabase(ProductEntity productEntity){
+        productRepository.save(productEntity);
     }
 
 }
