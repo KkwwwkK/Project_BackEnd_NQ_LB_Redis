@@ -16,6 +16,7 @@ import com.fsse2401.project_backend.exception.transactionProduct.TransactionNotF
 import com.fsse2401.project_backend.repository.TransactionRepository;
 import com.fsse2401.project_backend.service.*;
 import com.fsse2401.project_backend.util.TransactionProductDataUtil;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -118,6 +119,7 @@ public class TransactionServiceImpl implements TransactionService {
         // Return
         return new TransactionStatusSuccessData(TransactionResult.SUCCESS);
     }
+    @Transactional
     @Override
     public TransactionResponseData UpdateTransactionFinishedByTid(FirebaseUserData firebaseUserData, Integer tid){
         // Get user entity
@@ -140,7 +142,7 @@ public class TransactionServiceImpl implements TransactionService {
             transactionResponseData.getItems().add(new TransactionProductResponseData(transactionProductEntity));
         }
         // Empty cart
-//        cartItemService.deleteCartItemListByUser(userEntity);
+        cartItemService.deleteCartItemListByUser(userEntity);
         // Return status
         return transactionResponseData;
     }

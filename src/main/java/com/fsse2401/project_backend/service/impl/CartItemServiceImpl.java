@@ -17,6 +17,7 @@ import com.fsse2401.project_backend.service.CartItemService;
 import com.fsse2401.project_backend.service.ProductService;
 import com.fsse2401.project_backend.service.UserService;
 import com.fsse2401.project_backend.util.CartItemDataUtil;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +42,10 @@ public class CartItemServiceImpl implements CartItemService {
     @Override
     public CartItemResponseData putCartItem(FirebaseUserData firebaseUserData,
                                             Integer pid, Integer quantity){
+        // Check if quantity is negative
+        if (quantity <= 0){
+            throw new AddQuantityException();
+        }
         // Check if pid or quantity is null << Not working yet
         if (pid == null){
             throw new DataMissingException("pid input invalid!");
@@ -53,10 +58,6 @@ public class CartItemServiceImpl implements CartItemService {
         // Get product entity and check if product existed
         ProductEntity productEntity = productService.getEntityByPid(pid);
 
-        // Check if quantity is negative
-        if (quantity <= 0){
-            throw new AddQuantityException();
-        }
         // Search if cart item exists
         if(cartItemRepository.existsByUserAndProduct(userEntity, productEntity)){
             CartItemEntity cartItemEntity = getCartItemEntityByUserAndProduct(userEntity, productEntity);
@@ -68,12 +69,12 @@ public class CartItemServiceImpl implements CartItemService {
             cartItemEntity.setQuantity(cartItemEntity.getQuantity() + quantity);
             cartItemRepository.save(cartItemEntity);
         } else {
-            // Add new cart item if do not find exist cartItem
             // Check if quantity bigger than product's stock
             if (quantity > productEntity.getStock()){
                 // May change to throw new exception
                 throw new AddQuantityException();
             }
+            // Add new cart item if do not find exist cartItem
             CartItemEntity cartItemEntity = new CartItemEntity(quantity, productEntity, userEntity);
             cartItemRepository.save(cartItemEntity);
         }
@@ -116,12 +117,11 @@ public class CartItemServiceImpl implements CartItemService {
             throw new AddQuantityException();
         }
         // Search if cart item exists
-        CartItemEntity isExistCartItemEntity = cartItemRepository.findByUserAndProduct(userEntity, productEntity).orElse(null);
         if(isCartItemExistsByUserAndProduct(userEntity, productEntity)){
             // Update the cart item quantity and its product entity
             CartItemEntity cartItemEntity = getCartItemEntityByUserAndProduct(userEntity, productEntity);
             // Check if quantity bigger than stock
-            if(quantity + cartItemEntity.getQuantity() > productEntity.getStock()){
+            if(quantity > productEntity.getStock()){
                 throw new AddQuantityException();
             }
             cartItemEntity.setQuantity(quantity);
@@ -133,7 +133,7 @@ public class CartItemServiceImpl implements CartItemService {
         CartItemEntity updatedCartItemEntity = getCartItemEntityByUserAndProduct(userEntity, productEntity);
         return new UpdateUserCartResponseData(updatedCartItemEntity);
     }
-
+    @Transactional
     @Override
     public CartItemResponseData removeCartItemByPid(FirebaseUserData firebaseUserData, Integer pid){
         // Get user entity
@@ -145,16 +145,11 @@ public class CartItemServiceImpl implements CartItemService {
             throw new DataMissingException("pid input invalid!");
         }
         // Search if cart item exists
-        CartItemEntity isExistCartItemEntity = cartItemRepository.findByUserAndProduct(userEntity, productEntity).orElse(null);
-        if(isExistCartItemEntity != null){
-            // Update the product stock first before remove the product from the cart
-//            productEntity.setStock(productEntity.getStock() + isExistCartItemEntity.getQuantity());
-            // Update product database
-//            productRepository.save(productEntity);
-            // Remove the cart
-            cartItemRepository.delete(isExistCartItemEntity);
+        if(isCartItemExistsByUserAndProduct(userEntity, productEntity)){
+            // Delete the cart item
+            cartItemRepository.deleteByUserAndProduct(userEntity, productEntity);
         } else {
-            return new CartItemResponseData(CartItemResult.FAIL);
+            throw new CartItemNotFoundException();
         }
         return new CartItemResponseData(CartItemResult.SUCCESS);
     }
@@ -183,7 +178,11 @@ public class CartItemServiceImpl implements CartItemService {
 
     @Override
     public void deleteCartItemListByUser(UserEntity user){
-        cartItemRepository.deleteAllByUser(user);
+        if(cartItemRepository.existsAllByUser(user)){
+            cartItemRepository.deleteAllByUser(user);
+        } else {
+            throw new CartItemNotFoundException();
+        }
     }
 
 
