@@ -18,8 +18,8 @@ public class TransactionApi {
         this.transactionService = transactionService;
     }
 
-    @PutMapping("/prepare")
-    public TransactionResponseDto putTransaction(JwtAuthenticationToken jwtToken){
+    @PostMapping ("/prepare")
+    public TransactionResponseDto postTransaction(JwtAuthenticationToken jwtToken){
         return new TransactionResponseDto(
                 transactionService.putTransaction(JwtUtil.getFirebaseUserData(jwtToken))
         );

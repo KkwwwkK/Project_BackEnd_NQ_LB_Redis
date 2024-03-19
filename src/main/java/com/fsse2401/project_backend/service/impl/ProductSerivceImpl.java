@@ -30,7 +30,7 @@ public class ProductSerivceImpl implements ProductService {
     // Get Service
     public List<GetAllProductResponseData> getAllProducts(){
         List<GetAllProductResponseData> getAllProductResponseDataList = new ArrayList<>();
-        for(ProductEntity productEntity: productRepository.findAll()){
+        for(ProductEntity productEntity: productRepository.getAllBy()){
             getAllProductResponseDataList.add(new GetAllProductResponseData(productEntity));
         }
         return getAllProductResponseDataList;
