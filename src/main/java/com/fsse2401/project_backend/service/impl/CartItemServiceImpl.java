@@ -116,22 +116,15 @@ public class CartItemServiceImpl implements CartItemService {
         if (quantity <= 0){
             throw new AddQuantityException();
         }
-        // Search if cart item exists
-        if(isCartItemExistsByUserAndProduct(userEntity, productEntity)){
-            // Update the cart item quantity and its product entity
-            CartItemEntity cartItemEntity = getCartItemEntityByUserAndProduct(userEntity, productEntity);
-            // Check if quantity bigger than stock
-            if(quantity > productEntity.getStock()){
-                throw new AddQuantityException();
-            }
-            cartItemEntity.setQuantity(quantity);
-            cartItemRepository.save(cartItemEntity);
-        } else {
-            throw new GetUserCartException("User cart does not have this product!");
+        // Get and Search if cart item exists
+        CartItemEntity cartItemEntity = getCartItemEntityByUserAndProduct(userEntity, productEntity);
+        // Check if quantity bigger than stock
+        if(quantity > productEntity.getStock()){
+            throw new AddQuantityException();
         }
-        // Return the updated cartItem entity from database
-        CartItemEntity updatedCartItemEntity = getCartItemEntityByUserAndProduct(userEntity, productEntity);
-        return new UpdateUserCartResponseData(updatedCartItemEntity);
+        cartItemEntity.setQuantity(quantity);
+        return new UpdateUserCartResponseData(cartItemRepository.save(cartItemEntity));
+
     }
     @Transactional
     @Override
@@ -173,7 +166,8 @@ public class CartItemServiceImpl implements CartItemService {
 
     @Override
     public CartItemEntity getCartItemEntityByUserAndProduct(UserEntity user, ProductEntity product){
-        return cartItemRepository.findByUserAndProduct(user, product).orElseThrow(CartItemNotFoundException::new);
+        return cartItemRepository.findByUserAndProduct(user, product).
+                orElseThrow(CartItemNotFoundException::new);
     }
 
     @Override
@@ -184,6 +178,8 @@ public class CartItemServiceImpl implements CartItemService {
             throw new CartItemNotFoundException();
         }
     }
+
+
 
 
 }
