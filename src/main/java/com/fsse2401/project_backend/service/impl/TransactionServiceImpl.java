@@ -57,7 +57,7 @@ public class TransactionServiceImpl implements TransactionService {
         // To return and set total
         TransactionResponseData transactionResponseData = new TransactionResponseData(transactionEntity);
         for(TransactionProductEntity transactionProductEntity: transactionProductService.putTransactionProduct(
-                firebaseUserData,
+//                firebaseUserData,
                 transactionEntity,
                 cartItemEntityList
         )){
@@ -158,11 +158,6 @@ public class TransactionServiceImpl implements TransactionService {
         cartItemService.deleteCartItemListByUser(userEntity);
         // Return status
         return transactionResponseData;
-    }
-
-    @Override
-    public boolean isTransactionExistsByTid(Integer tid){
-        return transactionRepository.existsByTid(tid);
     }
 
     @Override

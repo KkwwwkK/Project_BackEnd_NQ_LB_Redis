@@ -14,7 +14,5 @@ public interface TransactionService {
 
     TransactionResponseData UpdateTransactionFinishedByTid(FirebaseUserData firebaseUserData, Integer tid);
 
-    boolean isTransactionExistsByTid(Integer tid);
-
     TransactionEntity getTransactionByTid(Integer tid, Integer uid);
 }

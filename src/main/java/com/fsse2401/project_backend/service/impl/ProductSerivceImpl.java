@@ -25,9 +25,6 @@ public class ProductSerivceImpl implements ProductService {
         this.productRepository = productRepository;
     }
 
-
-    // Logic for get all products Api
-
     @Override
     // Get Service
     public List<GetAllProductResponseData> getAllProducts(){
