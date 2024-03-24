@@ -10,14 +10,16 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CartItemRepository extends CrudRepository<CartItemEntity, Integer> {
-//    @Query(value = "SELECT * FROM transation_item ti WHERE ti.uid = ?1 AND ti.pid = ?2",
-//            nativeQuery = true)
-    Optional<CartItemEntity> findByUserAndProduct(UserEntity user, ProductEntity product);
-//    @Query(value = "SELECT * FROM transation_item ti WHERE ti.tid = ?1",
-//            nativeQuery = true)
-    List<CartItemEntity> findAllByUser(UserEntity user);
+    @Query(value = "SELECT * FROM cart_item ci WHERE ci.uid = ?1 AND ci.pid = ?2",
+            nativeQuery = true)
+    Optional<CartItemEntity> findByUserUidAndProductPid(Integer userId, Integer pid);
+    @Query(value = "SELECT * FROM cart_item ci WHERE ci.uid = ?1",
+            nativeQuery = true)
+    List<CartItemEntity> findAllByUserUid(Integer uid);
 
-    boolean existsByUserAndProduct(UserEntity user, ProductEntity product);
+//    @Query(value = "SELECT EXISTS(SELECT 1 FROM cart_item ci WHERE ci.uid = ?1 AND ci.pid = ?2)",
+//            nativeQuery = true) -- didnt work
+    boolean existsByUserUidAndProductPid(Integer userId, Integer pid);
 
     boolean existsAllByUser(UserEntity user);
 

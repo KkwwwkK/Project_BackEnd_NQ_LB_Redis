@@ -16,5 +16,5 @@ public interface TransactionService {
 
     boolean isTransactionExistsByTid(Integer tid);
 
-    TransactionEntity getTransactionByTid(Integer tid);
+    TransactionEntity getTransactionByTid(Integer tid, Integer uid);
 }

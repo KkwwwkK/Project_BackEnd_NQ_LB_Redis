@@ -32,26 +32,23 @@ public class TransactionProductServiceImpl implements TransactionProductService 
         // Get user entity
         UserEntity userEntity = userService.getEntityByFirebaseUserData(firebaseUserData);
 
-        // Initialize a total price for the transaction
-//        BigDecimal total = BigDecimal.ZERO;
         // Create transaction product and store into database, add subtotal to total
         for(CartItemEntity cartItemEntity: cartItemEntityList){
-//            total = total.add(TransactionProductDataUtil.getSubtotal(cartItemEntity));
             transactionProductRepository.save(new TransactionProductEntity(
                     transactionEntity, cartItemEntity
             ));
         }
         // return list
         List<TransactionProductEntity> transactionProductEntityList = new ArrayList<>();
-        for (TransactionProductEntity transactionProductEntity: transactionProductRepository.findAllByTansaction(transactionEntity)){
+        for (TransactionProductEntity transactionProductEntity: transactionProductRepository.findAllByTansactionTid(transactionEntity.getTid())){
             transactionProductEntityList.add(transactionProductEntity);
         }
         return transactionProductEntityList;
     }
 
     @Override
-    public List<TransactionProductEntity> getTransactionProductEntityLsitByTransaction(TransactionEntity transactionEntity){
-        return transactionProductRepository.findAllByTansaction(transactionEntity);
+    public List<TransactionProductEntity> getTransactionProductEntityLsitByTransaction(Integer tid){
+        return transactionProductRepository.findAllByTansactionTid(tid);
     }
 
 

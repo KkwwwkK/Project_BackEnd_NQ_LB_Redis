@@ -19,28 +19,28 @@ public class CartItemExceptionHandler {
 
     @ExceptionHandler(DataMissingException.class)
     public ResponseEntity<ErrorResponse> handleDataMissingException(DataMissingException e) {
-        logger.info("DataMissingException: " + e.getMessage());
+        logger.warn("DataMissingException: " + e.getMessage());
         ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(), e.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
     @ExceptionHandler(AddQuantityException.class)
     public ResponseEntity<ErrorResponse> handleAddQuantityException(AddQuantityException e) {
-        logger.info("AddQuantityException: " + e.getMessage());
+        logger.warn("AddQuantityException: " + e.getMessage());
         ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
     @ExceptionHandler(GetUserCartException.class)
     public ResponseEntity<ErrorResponse> handleGetUserCartException(GetUserCartException e) {
-        logger.info("GetUserCartException: " + e.getMessage());
+        logger.warn("GetUserCartException: " + e.getMessage());
         ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(), e.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
     @ExceptionHandler(CartItemNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleCartItemNotFoundException(CartItemNotFoundException e) {
-        logger.info("CartItemNotFoundException: " + e.getMessage());
+        logger.warn("CartItemNotFoundException: " + e.getMessage());
         ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(), e.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }

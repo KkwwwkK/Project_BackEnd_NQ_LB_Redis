@@ -1,7 +1,11 @@
 package com.fsse2401.project_backend.data.transaction.domainObject.response;
 
 import com.fsse2401.project_backend.constant.TransactionResult;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class TransactionStatusSuccessData {
     private TransactionResult result;
 
@@ -9,11 +13,4 @@ public class TransactionStatusSuccessData {
         this.result = result;
     }
 
-    public TransactionResult getResult() {
-        return result;
-    }
-
-    public void setResult(TransactionResult result) {
-        this.result = result;
-    }
 }

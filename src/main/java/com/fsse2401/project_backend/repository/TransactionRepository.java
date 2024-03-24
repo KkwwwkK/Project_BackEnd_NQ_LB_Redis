@@ -8,9 +8,9 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.Optional;
 
 public interface TransactionRepository extends CrudRepository<TransactionEntity, Integer> {
-    @Query(value = "SELECT * FROM transaction t WHERE t.tid = ?1",
+    @Query(value = "SELECT * FROM transaction t WHERE t.tid = ?1 AND t.uid = ?2",
             nativeQuery = true)
-    Optional<TransactionEntity> findByTid(Integer tid);
+    Optional<TransactionEntity> findByTidAndBuyerUid(Integer tid, Integer uid);
 
     boolean existsByTid(Integer tid);
 }

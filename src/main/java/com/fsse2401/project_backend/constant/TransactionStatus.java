@@ -4,5 +4,6 @@ public enum TransactionStatus {
     PREPARE,
     PROCESSING,
     SUCCESS,
-    FAILED
+//    FAILED - later use
 }
+

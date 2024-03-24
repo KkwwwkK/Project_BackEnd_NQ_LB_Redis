@@ -1,12 +1,15 @@
 package com.fsse2401.project_backend.data.transactionProduct.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fsse2401.project_backend.data.product.domainObject.response.ProductResponseData;
 import com.fsse2401.project_backend.data.product.dto.response.ProductResponseDto;
 import com.fsse2401.project_backend.data.transactionProduct.domainObject.response.TransactionProductResponseData;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 
+@Getter
+@Setter
 public class TransactionProductResponseDto {
     @JsonProperty("tpid")
     private Integer tpid;
@@ -24,35 +27,4 @@ public class TransactionProductResponseDto {
         this.product = new ProductResponseDto(data.getProduct());
     }
 
-    public Integer getTpid() {
-        return tpid;
-    }
-
-    public void setTpid(Integer tpid) {
-        this.tpid = tpid;
-    }
-
-    public ProductResponseDto getProduct() {
-        return product;
-    }
-
-    public void setProduct(ProductResponseDto product) {
-        this.product = product;
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
-    public BigDecimal getSubtotal() {
-        return subtotal;
-    }
-
-    public void setSubtotal(BigDecimal subtotal) {
-        this.subtotal = subtotal;
-    }
 }

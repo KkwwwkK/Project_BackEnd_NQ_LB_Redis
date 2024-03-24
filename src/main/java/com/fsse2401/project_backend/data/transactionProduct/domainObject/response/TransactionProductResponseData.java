@@ -3,10 +3,13 @@ package com.fsse2401.project_backend.data.transactionProduct.domainObject.respon
 import com.fsse2401.project_backend.data.product.domainObject.response.ProductResponseData;
 import com.fsse2401.project_backend.data.product.entity.ProductEntity;
 import com.fsse2401.project_backend.data.transactionProduct.entity.TransactionProductEntity;
-import com.fsse2401.project_backend.service.ProductService;
-import com.fsse2401.project_backend.util.TransactionProductDataUtil;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
+
+@Getter
+@Setter
 
 public class TransactionProductResponseData {
     private Integer tpid;
@@ -22,17 +25,6 @@ public class TransactionProductResponseData {
                 multiply(BigDecimal.valueOf(entity.getQuantity()));
     }
 
-    public Integer getTpid() {
-        return tpid;
-    }
-
-    public void setTpid(Integer tpid) {
-        this.tpid = tpid;
-    }
-
-    public ProductResponseData getProduct() {
-        return product;
-    }
 
     public void setProduct(TransactionProductEntity entity) {
         this.product = new ProductResponseData(
@@ -42,19 +34,4 @@ public class TransactionProductResponseData {
         );
     }
 
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
-    public BigDecimal getSubtotal() {
-        return subtotal;
-    }
-
-    public void setSubtotal(BigDecimal subtotal) {
-        this.subtotal = subtotal;
-    }
 }

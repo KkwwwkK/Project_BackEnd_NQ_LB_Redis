@@ -8,6 +8,8 @@ import com.fsse2401.project_backend.service.ProductService;
 import com.fsse2401.project_backend.util.ProductDataUtil;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +29,7 @@ public class ProductApi {
     }
 
     @GetMapping
+    @CachePut(value = "GetAllProductCache")
     public List<GetAllProductResponseDto> getAllProducts(){
         List<GetAllProductResponseDto> getAllProductResponseDtoList = new ArrayList<>();
         for(GetAllProductResponseData productResponseData: productService.getAllProducts()){
@@ -36,6 +39,7 @@ public class ProductApi {
     }
 
     @GetMapping("/{id}")
+    @CachePut(value = "GetProductByIdCache", key="#id")
     public ProductResponseDto getProductById(@PathVariable Integer id){
         return new ProductResponseDto(
                 productService.getProductById(id)
@@ -43,6 +47,7 @@ public class ProductApi {
     }
 
     @GetMapping("/all/{user_input}")
+    @CachePut(value = "GetProductsByUserInputCache", key="#user_input")
     public List<ProductResponseDto> getProductsByUserInput(@PathVariable String user_input){
         return ProductDataUtil.toProductResponseDto(
                 productService.getProductsByUserInput(user_input));

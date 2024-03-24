@@ -8,6 +8,7 @@ import com.fsse2401.project_backend.exception.product.ProductNotFoundException;
 import com.fsse2401.project_backend.repository.ProductRepository;
 import com.fsse2401.project_backend.service.ProductService;
 import com.fsse2401.project_backend.util.ProductDataUtil;
+import jakarta.persistence.Cacheable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,7 @@ public class ProductSerivceImpl implements ProductService {
 
 
     // Logic for get all products Api
+
     @Override
     // Get Service
     public List<GetAllProductResponseData> getAllProducts(){

@@ -15,5 +15,5 @@ public interface TransactionProductService {
                                                            List<CartItemEntity> cartItemEntityList);
 
 
-    List<TransactionProductEntity> getTransactionProductEntityLsitByTransaction(TransactionEntity transactionEntity);
+    List<TransactionProductEntity> getTransactionProductEntityLsitByTransaction(Integer tid);
 }

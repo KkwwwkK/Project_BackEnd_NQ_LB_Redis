@@ -22,11 +22,11 @@ public interface CartItemService {
     CartItemResponseData removeCartItemByPid(FirebaseUserData firebaseUserData, Integer pid);
 
     // Create method of getting cart item entity list by user entity
-    List<CartItemEntity> getCartItemEntityList(UserEntity userEntity);
+    List<CartItemEntity> getCartItemEntityList(Integer uid);
 
-    boolean isCartItemExistsByUserAndProduct(UserEntity user, ProductEntity product);
+    boolean isCartItemExistsByUserAndProduct(Integer uid, Integer pid);
 
-    CartItemEntity getCartItemEntityByUserAndProduct(UserEntity user, ProductEntity product);
+    CartItemEntity getCartItemEntityByUserAndProduct(Integer uid, Integer pid);
 
     void deleteCartItemListByUser(UserEntity user);
 }

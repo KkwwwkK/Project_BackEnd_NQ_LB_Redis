@@ -17,7 +17,7 @@ public class ProductExceptionHandler {
 
     @ExceptionHandler(DataMissingException.class)
     public ResponseEntity<ErrorResponse> handleDataMissingException(DataMissingException e) {
-        logger.info("DataMissingException: " + e.getMessage());
+        logger.warn("DataMissingException: " + e.getMessage());
         ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(), e.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
@@ -31,7 +31,7 @@ public class ProductExceptionHandler {
 
     @ExceptionHandler(ProductNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleProductNotFoundException(ProductNotFoundException e) {
-        logger.info("ProductNotFoundException: " + e.getMessage());
+        logger.warn("ProductNotFoundException: " + e.getMessage());
         ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(), e.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }

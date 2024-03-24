@@ -12,6 +12,8 @@ import com.fsse2401.project_backend.data.transactionProduct.entity.TransactionPr
 import com.fsse2401.project_backend.data.user.domainObject.FirebaseUserData;
 import com.fsse2401.project_backend.data.user.entity.UserEntity;
 import com.fsse2401.project_backend.exception.product.DataMissingException;
+import com.fsse2401.project_backend.exception.transaction.PayTransactionException;
+import com.fsse2401.project_backend.exception.transaction.UpdateStockException;
 import com.fsse2401.project_backend.exception.transactionProduct.TransactionNotFoundException;
 import com.fsse2401.project_backend.repository.TransactionRepository;
 import com.fsse2401.project_backend.service.*;
@@ -47,7 +49,7 @@ public class TransactionServiceImpl implements TransactionService {
         // Get user entity
         UserEntity userEntity = userService.getEntityByFirebaseUserData(firebaseUserData);
         // Get cart item entity list and check if empty in cartItemService
-        List<CartItemEntity> cartItemEntityList = cartItemService.getCartItemEntityList(userEntity);
+        List<CartItemEntity> cartItemEntityList = cartItemService.getCartItemEntityList(userEntity.getUid());
         // Create transaction entity
         TransactionEntity transactionEntity = new TransactionEntity(userEntity);
         transactionRepository.save(transactionEntity);
@@ -80,10 +82,10 @@ public class TransactionServiceImpl implements TransactionService {
             throw new DataMissingException("tid is needed!");
         }
         // Get and Check if TransactionEntity exists
-        TransactionEntity transactionEntity = getTransactionByTid(tid);
+        TransactionEntity transactionEntity = getTransactionByTid(tid, userEntity.getUid());
         // Get TransactionProductEntity list
         List<TransactionProductEntity> transactionProductEntityList
-                = transactionProductService.getTransactionProductEntityLsitByTransaction(transactionEntity);
+                = transactionProductService.getTransactionProductEntityLsitByTransaction(transactionEntity.getTid());
 
         // Return TransactionResponseData
         TransactionResponseData transactionResponseData = new TransactionResponseData(transactionEntity);
@@ -102,14 +104,21 @@ public class TransactionServiceImpl implements TransactionService {
             throw new DataMissingException("tid is needed!");
         }
         // Get and Check if TransactionEntity exists
-        TransactionEntity transactionEntity = getTransactionByTid(tid);
+        TransactionEntity transactionEntity = getTransactionByTid(tid, userEntity.getUid());
+        // Check if Transaction Status is Prepare
+        if (!transactionEntity.getStatus().equals(TransactionStatus.PREPARE.toString())){
+            throw new PayTransactionException();
+        }
         // Get list of TransactionProductEntity
         List<TransactionProductEntity> transactionProductEntityList
-                = transactionProductService.getTransactionProductEntityLsitByTransaction(transactionEntity);
+                = transactionProductService.getTransactionProductEntityLsitByTransaction(transactionEntity.getTid());
         // Update product stock
         for(TransactionProductEntity transactionProductEntity: transactionProductEntityList){
            ProductEntity productEntity = productService.getEntityByPid(transactionProductEntity.getPid());
-           // Check if quantity is bigger than stock -----------------------
+           // Check if quantity is bigger than stock
+            if(transactionProductEntity.getQuantity() > productEntity.getStock()){
+                throw new UpdateStockException(productEntity.getStock(), transactionProductEntity.getQuantity());
+            }
            productEntity.setStock(productEntity.getStock() - transactionProductEntity.getQuantity());
            productService.updateProductToDatabase(productEntity);
         }
@@ -129,13 +138,17 @@ public class TransactionServiceImpl implements TransactionService {
             throw new DataMissingException("tid is needed!");
         }
         // Get and Check if TransactionEntity exists
-        TransactionEntity transactionEntity = getTransactionByTid(tid);
+        TransactionEntity transactionEntity = getTransactionByTid(tid, userEntity.getUid());
+        //Check if transaction status is processing
+        if (!transactionEntity.getStatus().equals(TransactionStatus.PROCESSING.toString())){
+            throw new PayTransactionException();
+        }
         // Update transaction status to Processing
         transactionEntity.setStatus(TransactionStatus.SUCCESS.toString());
         transactionRepository.save(transactionEntity);
         // Get TransactionProductEntity list
         List<TransactionProductEntity> transactionProductEntityList
-                = transactionProductService.getTransactionProductEntityLsitByTransaction(transactionEntity);
+                = transactionProductService.getTransactionProductEntityLsitByTransaction(transactionEntity.getTid());
         // Return TransactionResponseData
         TransactionResponseData transactionResponseData = new TransactionResponseData(transactionEntity);
         for(TransactionProductEntity transactionProductEntity: transactionProductEntityList){
@@ -153,11 +166,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public TransactionEntity getTransactionByTid(Integer tid){
-        return transactionRepository.findByTid(tid).orElseThrow(TransactionNotFoundException::new);
+    public TransactionEntity getTransactionByTid(Integer tid, Integer uid){
+        return transactionRepository.findByTidAndBuyerUid(tid, uid).orElseThrow(TransactionNotFoundException::new);
     }
-
-
-
-
 }

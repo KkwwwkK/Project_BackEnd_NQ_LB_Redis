@@ -59,8 +59,8 @@ public class CartItemServiceImpl implements CartItemService {
         ProductEntity productEntity = productService.getEntityByPid(pid);
 
         // Search if cart item exists
-        if(cartItemRepository.existsByUserAndProduct(userEntity, productEntity)){
-            CartItemEntity cartItemEntity = getCartItemEntityByUserAndProduct(userEntity, productEntity);
+        if(isCartItemExistsByUserAndProduct(userEntity.getUid(), productEntity.getPid())){
+            CartItemEntity cartItemEntity = getCartItemEntityByUserAndProduct(userEntity.getUid(), productEntity.getPid());
             // Check if quantity bigger than product's stock
             if (quantity + cartItemEntity.getQuantity() > productEntity.getStock()){
                 // May change to throw new exception
@@ -87,7 +87,7 @@ public class CartItemServiceImpl implements CartItemService {
         UserEntity userEntity = userService.getEntityByFirebaseUserData(firebaseUserData);
 
         // Get cart item list entity
-        List<CartItemEntity> cartItemEntityList = cartItemRepository.findAllByUser(userEntity);
+        List<CartItemEntity> cartItemEntityList = cartItemRepository.findAllByUserUid(userEntity.getUid());
 
         // Check if list is empty
         if (cartItemEntityList.isEmpty()){
@@ -105,7 +105,7 @@ public class CartItemServiceImpl implements CartItemService {
         // Get product entity and check if product existed
         ProductEntity productEntity = productService.getEntityByPid(pid);
 
-        // Check if pid or quantity is null << Not working yet
+        // Check if pid or quantity is null
         if (pid == null){
             throw new DataMissingException("pid input invalid!");
         }
@@ -117,7 +117,7 @@ public class CartItemServiceImpl implements CartItemService {
             throw new AddQuantityException();
         }
         // Get and Search if cart item exists
-        CartItemEntity cartItemEntity = getCartItemEntityByUserAndProduct(userEntity, productEntity);
+        CartItemEntity cartItemEntity = getCartItemEntityByUserAndProduct(userEntity.getUid(), productEntity.getPid());
         // Check if quantity bigger than stock
         if(quantity > productEntity.getStock()){
             throw new AddQuantityException();
@@ -138,7 +138,7 @@ public class CartItemServiceImpl implements CartItemService {
             throw new DataMissingException("pid input invalid!");
         }
         // Search if cart item exists
-        if(isCartItemExistsByUserAndProduct(userEntity, productEntity)){
+        if(isCartItemExistsByUserAndProduct(userEntity.getUid(), productEntity.getPid())){
             // Delete the cart item
             cartItemRepository.deleteByUserAndProduct(userEntity, productEntity);
         } else {
@@ -149,9 +149,9 @@ public class CartItemServiceImpl implements CartItemService {
 
     @Override
     // Create method of getting cart item entity list by user entity
-    public List<CartItemEntity> getCartItemEntityList(UserEntity userEntity){
+    public List<CartItemEntity> getCartItemEntityList(Integer uid){
         // Get cart item entity list
-        List<CartItemEntity> cartItemEntityList = cartItemRepository.findAllByUser(userEntity);
+        List<CartItemEntity> cartItemEntityList = cartItemRepository.findAllByUserUid(uid);
         // Search if cart item list is empty
         if (cartItemEntityList.isEmpty()){
             throw new CartItemNotFoundException();
@@ -160,13 +160,13 @@ public class CartItemServiceImpl implements CartItemService {
     }
 
     @Override
-    public boolean isCartItemExistsByUserAndProduct(UserEntity user, ProductEntity product){
-        return cartItemRepository.existsByUserAndProduct(user, product);
+    public boolean isCartItemExistsByUserAndProduct(Integer uid, Integer pid){
+        return cartItemRepository.existsByUserUidAndProductPid(uid, pid);
     }
 
     @Override
-    public CartItemEntity getCartItemEntityByUserAndProduct(UserEntity user, ProductEntity product){
-        return cartItemRepository.findByUserAndProduct(user, product).
+    public CartItemEntity getCartItemEntityByUserAndProduct(Integer uid, Integer pid){
+        return cartItemRepository.findByUserUidAndProductPid(uid, pid).
                 orElseThrow(CartItemNotFoundException::new);
     }
 

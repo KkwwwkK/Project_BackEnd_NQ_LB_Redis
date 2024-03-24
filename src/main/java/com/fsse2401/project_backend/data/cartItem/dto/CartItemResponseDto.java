@@ -2,7 +2,11 @@ package com.fsse2401.project_backend.data.cartItem.dto;
 
 import com.fsse2401.project_backend.constant.CartItemResult;
 import com.fsse2401.project_backend.data.cartItem.domainObject.response.CartItemResponseData;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class CartItemResponseDto {
     private CartItemResult result;
 
@@ -10,11 +14,4 @@ public class CartItemResponseDto {
         this.result = data.getResult();
     }
 
-    public CartItemResult getResult() {
-        return result;
-    }
-
-    public void setResult(CartItemResult result) {
-        this.result = result;
-    }
 }
