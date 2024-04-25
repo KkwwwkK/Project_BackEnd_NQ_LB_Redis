@@ -1,5 +1,6 @@
 package com.fsse2401.project_backend.api;
 
+import com.fsse2401.project_backend.config.EnvConfig;
 import com.fsse2401.project_backend.data.transaction.dto.response.TransactionResponseDto;
 import com.fsse2401.project_backend.data.transaction.dto.response.TransactionStatusSuccessDto;
 import com.fsse2401.project_backend.service.TransactionService;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/transaction")
+@CrossOrigin({EnvConfig.DEV_BASE_URL, EnvConfig.PROD_BASE_URL})
 public class TransactionApi {
     private final TransactionService transactionService;
 
@@ -18,7 +20,7 @@ public class TransactionApi {
         this.transactionService = transactionService;
     }
 
-    @PostMapping ("/prepare")
+    @PutMapping ("/prepare")
     public TransactionResponseDto postTransaction(JwtAuthenticationToken jwtToken){
         return new TransactionResponseDto(
                 transactionService.putTransaction(JwtUtil.getFirebaseUserData(jwtToken))
