@@ -18,7 +18,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/public/product")
-@CrossOrigin({EnvConfig.DEV_BASE_URL, EnvConfig.PROD_BASE_URL})
+@CrossOrigin({
+        EnvConfig.DEV_BASE_URL,
+        EnvConfig.PROD_BASE_URL,
+        EnvConfig.PROD_S3_BASE_URL
+})
 public class ProductApi {
     // Add bean
     private final ProductService productService;

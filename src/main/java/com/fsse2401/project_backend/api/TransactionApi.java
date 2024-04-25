@@ -11,7 +11,11 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/transaction")
-@CrossOrigin({EnvConfig.DEV_BASE_URL, EnvConfig.PROD_BASE_URL})
+@CrossOrigin({
+        EnvConfig.DEV_BASE_URL,
+        EnvConfig.PROD_BASE_URL,
+        EnvConfig.PROD_S3_BASE_URL
+})
 public class TransactionApi {
     private final TransactionService transactionService;
 

@@ -18,7 +18,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/cart")
-@CrossOrigin({EnvConfig.DEV_BASE_URL, EnvConfig.PROD_BASE_URL})
+@CrossOrigin({
+        EnvConfig.DEV_BASE_URL,
+        EnvConfig.PROD_BASE_URL,
+        EnvConfig.PROD_S3_BASE_URL
+})
 public class CartItemApi {
     private final CartItemService cartItemService;
     @Autowired
@@ -40,6 +44,10 @@ public class CartItemApi {
 
     @GetMapping
     public List<GetUserCartResponseDto> getUserCart(JwtAuthenticationToken jwtToken){
+
+        // TODO
+        // New a empty cartItem List first to return if no cart items
+
         List<GetUserCartResponseData> getUserCartResponseDataList
                 = cartItemService.getUserCartItemList(JwtUtil.getFirebaseUserData(jwtToken));
         return CartItemDataUtil.toResponseDtoList(getUserCartResponseDataList);
