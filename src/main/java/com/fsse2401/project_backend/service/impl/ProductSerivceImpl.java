@@ -45,14 +45,14 @@ public class ProductSerivceImpl implements ProductService {
     // Logic for get products by user description of product name Api
     @Override
     public List<ProductResponseData> getProductsByUserInput(String userInput){
-        // Check if userInput is empty
-        if (userInput.isEmpty() || userInput.isBlank()){
-            throw new DataMissingException("description is needed");
-        }
-        // Check if no such product
-        if (getProductsByName(userInput).isEmpty()){
-            throw new ProductNotFoundException();
-        }
+//        // Check if userInput is empty
+//        if (userInput.isEmpty() || userInput.isBlank()){
+//            throw new DataMissingException("description is needed");
+//        }
+//        // Check if no such product
+//        if (getProductsByName(userInput).isEmpty()){
+//            throw new ProductNotFoundException();
+//        }
         // Get products by name description
         return ProductDataUtil.toProductResponseData(getProductsByName(userInput));
     }

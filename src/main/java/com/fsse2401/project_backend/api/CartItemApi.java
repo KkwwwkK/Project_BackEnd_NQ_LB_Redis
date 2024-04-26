@@ -45,9 +45,6 @@ public class CartItemApi {
     @GetMapping
     public List<GetUserCartResponseDto> getUserCart(JwtAuthenticationToken jwtToken){
 
-        // TODO
-        // New a empty cartItem List first to return if no cart items
-
         List<GetUserCartResponseData> getUserCartResponseDataList
                 = cartItemService.getUserCartItemList(JwtUtil.getFirebaseUserData(jwtToken));
         return CartItemDataUtil.toResponseDtoList(getUserCartResponseDataList);

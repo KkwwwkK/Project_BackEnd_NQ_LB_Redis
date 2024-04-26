@@ -89,10 +89,6 @@ public class CartItemServiceImpl implements CartItemService {
         // Get cart item list entity
         List<CartItemEntity> cartItemEntityList = cartItemRepository.findAllByUserUid(userEntity.getUid());
 
-        // Check if list is empty
-        if (cartItemEntityList.isEmpty()){
-            throw new GetUserCartException("User do not have any cart items yet!");
-        }
         // return list
         return CartItemDataUtil.toResponseDataList(cartItemEntityList);
     }
