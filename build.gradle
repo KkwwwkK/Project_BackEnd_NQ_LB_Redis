@@ -22,6 +22,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.projectlombok:lombok'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation "com.stripe:stripe-java:25.4.0"
 	testImplementation 'org.springframework.security:spring-security-test'
 	// Extra adding the below four
 	runtimeOnly 'com.mysql:mysql-connector-j'

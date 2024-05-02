@@ -27,7 +27,7 @@ public class SecurityConfig {
                         .requestMatchers(new AntPathRequestMatcher("/public/product/all/{user_input}")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/public/product/{id}")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/public/product")).permitAll()
-//                        .requestMatchers("/public/**").permitAll()
+                        .requestMatchers("/public/**").permitAll()
                         .anyRequest().authenticated())
                 // check Max solution as well
 //                .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
