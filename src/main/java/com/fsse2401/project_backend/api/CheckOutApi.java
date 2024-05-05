@@ -1,5 +1,6 @@
 package com.fsse2401.project_backend.api;
 
+import com.fsse2401.project_backend.config.EnvConfig;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.checkout.Session;
@@ -10,7 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@CrossOrigin("*")
+@CrossOrigin({
+        EnvConfig.DEV_BASE_URL,
+        EnvConfig.PROD_BASE_URL,
+        EnvConfig.PROD_S3_BASE_URL
+})
 public class CheckOutApi {
 //    @PostMapping("/public/checkout")
 //    public void checkout() throws StripeException {
