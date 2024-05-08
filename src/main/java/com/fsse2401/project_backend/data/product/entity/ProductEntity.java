@@ -29,6 +29,8 @@ public class ProductEntity{
     @Column(nullable = false)
     private Integer stock;
 
+    private String stripe_price_id;
+
     public ProductEntity(TransactionProductEntity entity) {
         setPid(entity.getPid());
         this.name = entity.getName();
